@@ -33,7 +33,9 @@ def main():
         try:
             with open(args.file, "r", encoding="utf-8") as fh:
                 raw = fh.read()
-        except OSError as exc:
+        except (OSError, UnicodeDecodeError) as exc:
+            # UnicodeDecodeError is a ValueError, not an OSError: without it
+            # a non-UTF-8 file escapes as a raw traceback.
             print(f"Invalid JSON: could not read file: {exc}")
             return 2
     else:
